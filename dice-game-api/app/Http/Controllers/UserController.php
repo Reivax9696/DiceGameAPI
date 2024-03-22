@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -27,11 +28,25 @@ class UserController extends Controller
         return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
     }
 
+    public function login(Request $request)
+    {
+        $credentials = $request->only('nickname', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $user = User::where('nickname', $request->nickname)->first();
+            $token = $user->createToken('MyApp')->accessToken;
+
+            return response()->json(['token' => $token]);
+        }
+
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
 
     public function update(Request $request, $id)
     {
 
-        $user = User::findOrFail($id);
+        $user = User::findOrFail(Auth::user()->id);
 
         $request->validate([
             'nickname' => 'nullable|unique:users,nickname,'.$id,

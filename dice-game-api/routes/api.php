@@ -19,6 +19,12 @@ use App\Http\Controllers\GameController;
 //Create a player
 Route::post('/players', [UserController::class, 'create']);
 
+//Existing player login
+Route::post('/login', [UserController::class, 'login']);
+
+
+Route::middleware(['auth:api'])->group(function () {
+
 // Player rolls the dice
 Route::post('/players/{id}/games', [GameController::class, 'roll']);
 
@@ -42,6 +48,7 @@ Route::get('/players/ranking/loser', [UserController::class, 'loser']);
 
 // Get the player with the best success rate
 Route::get('/players/ranking/winner', [UserController::class, 'winner']);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
