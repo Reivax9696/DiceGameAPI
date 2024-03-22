@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Game;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class GameController extends Controller
 {
+
     public function roll(Request $request, $id)
     {
-
-        $user = User::findOrFail($id);
+        $user = Auth::user();
+        //$user = User::findOrFail($id);
 
         $dice1 = rand(1, 6);
         $dice2 = rand(1, 6);
@@ -30,7 +32,9 @@ class GameController extends Controller
 
     public function destroy($id)
 {
-    $user = User::findOrFail($id);
+    //$user = User::findOrFail($id);
+    $user = User::findOrFail(Auth::user()->id);
+
     $user->games()->delete();
 
     return response()->json(['message' => 'All games deleted successfully']);
@@ -38,7 +42,9 @@ class GameController extends Controller
 
     public function index($id)
 {
-    $user = User::findOrFail($id);
+    //$user = User::findOrFail($id);
+    $user = User::findOrFail(Auth::user()->id);
+
     $games = $user->games;
 
     return response()->json(['games' => $games]);
