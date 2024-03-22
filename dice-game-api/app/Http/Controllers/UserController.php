@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+
+
 
 class UserController extends Controller
 {
@@ -25,6 +28,9 @@ class UserController extends Controller
             'password' => $hashedPassword,
         ]);
 
+        $defaultRole = Role::where('name', 'Player')->first();
+        $user->assignRole($defaultRole);
+
         return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
     }
 
@@ -41,7 +47,6 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Unauthorized'], 401);
     }
-
 
     public function update(Request $request, $id)
     {
@@ -60,7 +65,7 @@ class UserController extends Controller
     }
 
     public function index()
-    {
+{
     $users = User::all();
 
     $users->loadCount(['games', 'games as victories' => function ($query) {
@@ -73,8 +78,7 @@ class UserController extends Controller
     });
 
     return response()->json(['users' => $users]);
-    }
-
+}
 
     public function ranking()
     {
@@ -95,7 +99,6 @@ class UserController extends Controller
         return response()->json(['ranking' => $ranking]);
         }
 
-
      public function loser()
      {
          $users = User::withCount('games')
@@ -113,7 +116,6 @@ class UserController extends Controller
 
          return response()->json(['loser' => $loser]);
      }
-
 
      public function winner()
      {

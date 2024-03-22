@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class GameController extends Controller
 {
+
     public function roll(Request $request, $id)
     {
 
