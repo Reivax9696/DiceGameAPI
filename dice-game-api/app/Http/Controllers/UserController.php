@@ -14,6 +14,19 @@ class UserController extends Controller
 {
     public function create(Request $request)
     {
+
+
+        $existingEmail = User::where('email', $request->email)->exists();
+        if ($existingEmail) {
+            return response()->json(['error' => 'Email already exists'], 422);
+        }
+
+
+        $existingNickname = User::where('nickname', $request->nickname)->exists();
+        if ($existingNickname) {
+            return response()->json(['error' => 'Nickname already exists'], 422);
+
+        }
         $request->validate([
             'email' => 'required|email|unique:users,email',
             'nickname' => 'unique:users,nickname',
@@ -47,6 +60,14 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Unauthorized'], 401);
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        return response()->json(['message' => 'Logout successful']);
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -135,3 +156,5 @@ class UserController extends Controller
          return response()->json(['winner' => $winner]);
      }
 }
+
+
