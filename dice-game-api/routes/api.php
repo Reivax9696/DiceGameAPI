@@ -38,21 +38,24 @@ Route::get('/players/{id}/games', [GameController::class, 'index']);
 
 // Modify the name of the player
 Route::put('/players/{id}', [UserController::class, 'update']);
+
+//Logout current player
+Route::post('/logout', [UserController::class, 'logout']);
 });
 
 
 Route::middleware(['auth:api', CheckAdministratorRole::class])->group(function () {
-    // Get the list of all players
-    Route::get('/players', [UserController::class, 'index']);
+// Get the list of all players
+Route::get('/players', [UserController::class, 'index']);
 
-    // Get the average success rate of all players
-    Route::get('/players/ranking', [UserController::class, 'ranking']);
+// Get the average success rate of all players
+Route::get('/players/ranking', [UserController::class, 'ranking']);
 
-    // Get the player with the worst success rate
-    Route::get('/players/ranking/loser', [UserController::class, 'loser']);
+// Get the player with the worst success rate
+Route::get('/players/ranking/loser', [UserController::class, 'loser']);
 
-    // Get the player with the best success rate
-    Route::get('/players/ranking/winner', [UserController::class, 'winner']);
+// Get the player with the best success rate
+Route::get('/players/ranking/winner', [UserController::class, 'winner']);
 });
 
 
